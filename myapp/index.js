@@ -17,6 +17,7 @@ const intializeDBAndServer = async ()=>{
         console.log("Server Running at http://localhost:3000/");
     });
 }
+intializeDBAndServer();
 
 // API-call  (getmethod)
 app.get("/books/",  async (request, response)=>{
