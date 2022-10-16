@@ -2,7 +2,7 @@
 
 let express = require("express");
 let app = express();
-
+let { open } = require(sqlite);
 let path = require("path");
 let sqlite3 = require("sqlite3");
 let dbpath = path.join(__dirname, "goodreads.db");
