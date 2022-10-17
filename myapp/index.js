@@ -1,29 +1,44 @@
-//intializeDBAndServer
+const express = require("express");
+const app = express();
 
-let express = require("express");
-let app = express();
-let { open } = require(sqlite);
+//intializeDBAndServer & getting connection object
+
 let path = require("path");
-let sqlite3 = require("sqlite3");
+let db = null; //database connection object
 let dbpath = path.join(__dirname, "goodreads.db");
-let db = null;
+let sqlite3 = require("sqlite3");
 
-const intializeDBAndServer = async ()=>{
+let intializeDBAndServer = async () => {
+  try {
     db = await open({
-        filename: dbpath;
-        driver: sqlite3.Database;
+      filename: dbpath,
+      driver: sqlite3.Database,
     });
-    app.listen(3000,()=>{
-        console.log("Server Running at http://localhost:3000/");
+
+    app.listen(3000, () => {
+      console.log("Server starting on https://localhost:3000/");
     });
-}
+  } catch (e) {
+    console.log(`DB Error: ${e.message}`);
+    process.exit(1);
+  }
+};
 intializeDBAndServer();
 
-// API-call  (getmethod)
-app.get("/books/",  async (request, response)=>{
-    let getBooksQuery = `SELECT * FROM book ORDER BY book_id;`;
-    let booksArray = await db.all(getBooksQuery)
-    response.send(booksArray);
+//API-call for getting resource
+
+app.get("/books/", async (request, response) => {
+  let getbooksQuery = `
+    SELECT
+    *
+    FROM 
+    books
+    ORDER BY 
+    books_id;
+    `;
+
+  let booksArray = await db.all(getbooksQuery);
+  response.send(booksArray);
 });
 
 
